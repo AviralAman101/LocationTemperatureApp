@@ -21,12 +21,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @Lazy(false)
 public class WeatherSystemImpl implements WeatherSystem{
+
+    Logger logger =  java.util.logging.Logger.getLogger(this.getClass().getName());
 
     @Autowired
     private RestTemplate restTemplate;
@@ -87,11 +90,29 @@ public class WeatherSystemImpl implements WeatherSystem{
 
     private void notifyUsers() {
         List<ExceededTemperatureUserView> userViewList = exceededTempV.listAll();
+        // The above view contains logic to aggregate the temperature from different providers like IMD etc
+        // It also contains logic to filter only details about users whose chosen
+        // preferences are low and needs to be notified
+        // Please refer schema.sql, View Name : EXCEEDED_TEMP_V
         userViewList.forEach(user -> {
-            System.out.println(user.getUserId());
-            System.out.println(user.getState());
-            System.out.println(user.getCity());
+            print(user);
+            preferenceDao.updateLastNotified(user.getCity(), user.getState(), user.getUserId());
         });
+    }
+
+    private void print(ExceededTemperatureUserView view){
+        logger.info("User with the ID will be notified [USER_ID]: "+view.getUserId());
+        logger.info("Threshold set by the user : " + view.getThreshold());
+        logger.info("Current temperature : " + view.getTempC());
+        if(view.getIsSmsActive().equals("Y")){
+            logger.info("SMS sent to the user with ID : " + view.getUserId());
+        }
+        if(view.getIsMailActive().equals("Y")){
+            logger.info("Mail sent to the user with ID : " + view.getUserId());
+        }
+        if(view.getIsAppNotifyActive().equals("Y")){
+            logger.info("App notification sent to the user with ID : " + view.getUserId());
+        }
     }
 
     private Temperature mapToTemperature(WeatherResponseDTO weatherResponseDTO, Long providerId){

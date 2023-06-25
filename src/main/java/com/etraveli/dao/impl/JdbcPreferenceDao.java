@@ -137,7 +137,7 @@ public class JdbcPreferenceDao implements PreferenceDao {
     }
 
     @Override
-    public void updateLastNotified(String city, String state, Integer userId) {
+    public void updateLastNotified(String city, String state, Long userId) {
         jdbcTemplate.update("UPDATE T_PREFERENCE SET LAST_NOTIFIED = now() WHERE CITY=? AND STATE=? AND USER_ID=?",
                 city,state,userId);
     }

@@ -8,5 +8,5 @@ import java.util.List;
 public interface PreferenceDao extends CRUDRepository<Preference, PreferenceID>{
     List<Preference> findAllLocations();
 
-    void updateLastNotified(String city, String state, Integer userId);
+    void updateLastNotified(String city, String state, Long userId);
 }

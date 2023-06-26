@@ -16,11 +16,12 @@ public class PreferenceDeleteController {
     @Autowired
     private PreferenceService preferenceService;
 
-    @RequestMapping(value = "/deletePreference/{id}/{city}", method = RequestMethod.GET)
-    public String selectForDelete(@PathVariable Long id, @PathVariable String city, Model model) {
+    @RequestMapping(value = "/deletePreference/{id}/{city}/{state}", method = RequestMethod.GET)
+    public String selectForDelete(@PathVariable Long id, @PathVariable String city,@PathVariable String state, Model model) {
         PreferenceID preferenceID = new PreferenceID();
         preferenceID.setCity(city);
         preferenceID.setUserId(id);
+        preferenceID.setState(state);
         model.addAttribute("preference", preferenceService.findById(preferenceID));
         return "preferenceDelete";
     }
@@ -35,11 +36,8 @@ public class PreferenceDeleteController {
         String message = null;
         String viewName = null;
         try {
-            PreferenceID preferenceID = new PreferenceID();
-            preferenceID.setUserId(preference.getUserId());
-            preferenceID.setCity(preference.getCity());
-            preferenceService.delete(preferenceID);
-            message = "Preference deleted.For User id :" + preferenceID.getUserId();
+            preferenceService.delete(preference);
+            message = "Preference deleted.For User id :" + preference.getUserId();
             viewName = "redirect:/mvc/listPreferences";
             sessionStatus.setComplete();
         } catch (Exception ex) {

@@ -62,7 +62,7 @@ public class JdbcPreferenceDao implements PreferenceDao {
                 Preference preference = new Preference();
                 preference.setCity(preferenceID.getCity());
                 preference.setUserId(preferenceID.getUserId());
-                preference.setState(preference.getState());
+                preference.setState(preferenceID.getState());
                 preference.setNotifyCycleMins(rs.getLong("NOTIFY_CYCLE_MINS"));
                 preference.setIsSmsActive(rs.getString("IS_SMS_ACTIVE"));
                 preference.setIsMailActive(rs.getString("IS_MAIL_ACTIVE"));
@@ -119,6 +119,13 @@ public class JdbcPreferenceDao implements PreferenceDao {
     private void validatePreference(Preference preference){
         if(Objects.isNull(preference.getUserId()) || Objects.isNull(preference.getCity()))
             throw new ApplicationCustomException("Mandatory values not present in the payload.");
+        if(!preference.getIsAppNotifyActive().equals("Y") && !preference.getIsAppNotifyActive().equals("N"))
+            throw new ApplicationCustomException("Is App Notification required value should be Y or N");
+        if(!preference.getIsMailActive().equals("Y") && !preference.getIsMailActive().equals("N"))
+            throw new ApplicationCustomException("Is Mail Notification required value should be Y or N");
+        if(!preference.getIsSmsActive().equals("Y") && !preference.getIsSmsActive().equals("N"))
+            throw new ApplicationCustomException("Is SMS Notification required value should be Y or N");
+
     }
 
     @Override

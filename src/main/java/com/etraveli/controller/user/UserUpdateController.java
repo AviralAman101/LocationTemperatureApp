@@ -22,7 +22,7 @@ public class UserUpdateController {
 	
 	@RequestMapping(value = "/updateUser/{id}", method = RequestMethod.GET)
 	public String selectForUpdate(@PathVariable Long id, Model model) {
-		model.addAttribute("person", userService.findById(id));
+		model.addAttribute("user", userService.findById(id));
 		return "userUpdate";
 	}
 	

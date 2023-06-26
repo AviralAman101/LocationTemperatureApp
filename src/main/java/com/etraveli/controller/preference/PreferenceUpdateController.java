@@ -16,12 +16,13 @@ public class PreferenceUpdateController {
     @Autowired
     private PreferenceService preferenceService;
 
-    @RequestMapping(value = "/updatePreference/{id}/{city}", method = RequestMethod.GET)
-    public String selectForUpdate(@PathVariable Long id,@PathVariable String city, Model model) {
+    @RequestMapping(value = "/updatePreference/{id}/{city}/{state}", method = RequestMethod.GET)
+    public String selectForUpdate(@PathVariable Long id,@PathVariable String city,@PathVariable String state, Model model) {
 
-            PreferenceID preferenceID = new PreferenceID();
+        PreferenceID preferenceID = new PreferenceID();
         preferenceID.setUserId(id);
         preferenceID.setCity(city);
+        preferenceID.setState(state);
         Preference byId = preferenceService.findById(preferenceID);
         model.addAttribute("preference", byId);
         return "preferenceUpdate";
